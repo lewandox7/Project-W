@@ -15,9 +15,22 @@ loginForm.addEventListener('submit', async (event) => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Melakukan autentikasi dengan Supabase menggunakan username dan password
+    // Mencari pengguna berdasarkan username
+    const { data: user, error: userError } = await supabase
+        .from('users')  // Ganti 'users' dengan nama tabel Anda
+        .select('email, password')  // Ambil data email dan password
+        .eq('username', username)  // Cocokkan dengan username yang dimasukkan
+        .single();  // Ambil satu data jika ditemukan
+
+    if (userError || !user) {
+        // Menampilkan pesan kesalahan jika username tidak ditemukan
+        alert('Username tidak ditemukan.');
+        return;
+    }
+
+    // Melakukan autentikasi dengan password yang ditemukan pada username
     const { data, error } = await supabase.auth.signInWithPassword({
-        email: username,  // Ganti email dengan username
+        email: user.email,  // Gunakan email yang ditemukan pada pengguna
         password: password
     });
 
