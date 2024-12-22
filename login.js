@@ -1,6 +1,6 @@
 // URL dan anon key Supabase
-const SUPABASE_URL = 'https://your-project-ref.supabase.co';  // Ganti dengan URL Supabase Anda
-const SUPABASE_ANON_KEY = 'your-anon-key';  // Ganti dengan anon key Supabase Anda
+const SUPABASE_URL = 'https://cchpejgruuxduhhcpdfl.supabase.co';  // URL Supabase Anda
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjaHBlamdydXV4ZHVoaGNwZGZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4Mjc3NjgsImV4cCI6MjA1MDQwMzc2OH0.HN_AwuN48jmzZBqp8YdiGJO1RCel9VpxG9K6zDQUTBI';  // API Key Supabase Anda
 
 // Inisialisasi Supabase
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -22,8 +22,12 @@ loginForm.addEventListener('submit', async (event) => {
     });
 
     if (error) {
+        // Menampilkan notifikasi error jika login gagal
         alert('Login gagal: ' + error.message);
     } else {
+        // Menyimpan data pengguna untuk penggunaan lebih lanjut
+        localStorage.setItem('user', JSON.stringify(data.user));
+
         alert('Login berhasil! Selamat datang ' + data.user.email);
         // Redirect ke halaman setelah login sukses
         window.location.href = '/dashboard.html';  // Ganti dengan URL dashboard kamu
