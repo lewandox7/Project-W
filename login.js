@@ -1,6 +1,6 @@
 // URL dan anon key Supabase
-const SUPABASE_URL = 'https://cchpejgruuxduhhcpdfl.supabase.co';  // URL Supabase Anda
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjaHBlamdydXV4ZHVoaGNwZGZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4Mjc3NjgsImV4cCI6MjA1MDQwMzc2OH0.HN_AwuN48jmzZBqp8YdiGJO1RCel9VpxG9K6zDQUTBI';  // API Key Supabase Anda
+const SUPABASE_URL = 'https://cchpejgruuxduhhcpdfl.supabase.co';  // Ganti dengan URL Supabase Anda
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjaHBlamdydXV4ZHVoaGNwZGZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ4Mjc3NjgsImV4cCI6MjA1MDQwMzc2OH0.HN_AwuN48jmzZBqp8YdiGJO1RCel9VpxG9K6zDQUTBI';  // Ganti dengan API Key Supabase Anda
 
 // Inisialisasi Supabase
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -17,8 +17,8 @@ loginForm.addEventListener('submit', async (event) => {
 
     // Mencari pengguna berdasarkan username
     const { data: user, error: userError } = await supabase
-        .from('users')  // Ganti 'users' dengan nama tabel Anda
-        .select('email, password')  // Ambil data email dan password
+        .from('users')  // Nama tabel users
+        .select('id, username, password, role')  // Ambil kolom yang diperlukan
         .eq('username', username)  // Cocokkan dengan username yang dimasukkan
         .single();  // Ambil satu data jika ditemukan
 
@@ -28,21 +28,19 @@ loginForm.addEventListener('submit', async (event) => {
         return;
     }
 
-    // Melakukan autentikasi dengan password yang ditemukan pada username
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: user.email,  // Gunakan email yang ditemukan pada pengguna
-        password: password
-    });
-
-    if (error) {
-        // Menampilkan notifikasi error jika login gagal
-        alert('Login gagal: ' + error.message);
-    } else {
-        // Menyimpan data pengguna untuk penggunaan lebih lanjut
-        localStorage.setItem('user', JSON.stringify(data.user));
-
-        alert('Login berhasil! Selamat datang ' + data.user.email);
-        // Redirect ke halaman setelah login sukses
-        window.location.href = '/dashboard.html';  // Ganti dengan URL dashboard kamu
+    // Cek apakah password yang dimasukkan sesuai dengan password yang ada di database
+    if (password !== user.password) {
+        // Menampilkan pesan kesalahan jika password salah
+        alert('Password salah.');
+        return;
     }
+
+    // Jika login berhasil, simpan informasi pengguna dan role
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Menampilkan pesan login berhasil
+    alert('Login berhasil! Selamat datang ' + user.username);
+
+    // Redirect ke halaman dashboard
+    window.location.href = '/dashboard.html';  // Ganti dengan URL dashboard kamu
 });
