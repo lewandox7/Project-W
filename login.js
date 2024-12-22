@@ -12,12 +12,12 @@ const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();  // Mencegah form dari reload
 
-    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    // Melakukan autentikasi dengan Supabase
+    // Melakukan autentikasi dengan Supabase menggunakan username dan password
     const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
+        email: username,  // Ganti email dengan username
         password: password
     });
 
