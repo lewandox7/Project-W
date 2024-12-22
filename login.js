@@ -15,6 +15,9 @@ loginForm.addEventListener('submit', async (event) => {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
+    // Menampilkan pesan loading atau pemberitahuan sebelum melakukan request
+    console.log('Memeriksa login untuk username: ' + username);
+
     // Mencari pengguna berdasarkan username
     const { data: user, error: userError } = await supabase
         .from('users')  // Nama tabel users
@@ -22,15 +25,15 @@ loginForm.addEventListener('submit', async (event) => {
         .eq('username', username)  // Cocokkan dengan username yang dimasukkan
         .single();  // Ambil satu data jika ditemukan
 
+    // Cek apakah terjadi error atau tidak ada user yang ditemukan
     if (userError || !user) {
-        // Menampilkan pesan kesalahan jika username tidak ditemukan
         alert('Username tidak ditemukan.');
+        console.error(userError);  // Log error ke konsol
         return;
     }
 
     // Cek apakah password yang dimasukkan sesuai dengan password yang ada di database
     if (password !== user.password) {
-        // Menampilkan pesan kesalahan jika password salah
         alert('Password salah.');
         return;
     }
